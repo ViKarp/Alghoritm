@@ -8,6 +8,7 @@ for line in f:
     T.append(list(map(bool, targ.copy())))
 A = np.array(A)
 T = np.array(T)
+
 #Проверка на правильность
 
 n = len(A)
@@ -16,9 +17,9 @@ for i in A:
         exit()
 #Построение транзитивной матрицы
 
-for i in range(n):
-    for j in range(n):
-        for k in range(n):
+for k in range(n):
+    for i in range(n):
+        for j in range(n):
             T[i][j] = T[i][j] or (T[i][k] and T[k][j])
 
 #Столбец сумм строк
@@ -30,27 +31,27 @@ for i in range(n):
         Flag = True
     S.append(sum(T[i]))
 
-#if Flag == False:
-    #exit()
+if Flag == False:
+    exit(0)
 
 #Матрица перестановок
-#TODO
-S_sort = sorted(S.copy())
-P = np.array([np.array([0]*n)]*n)
 
+S_sort = sorted(S.copy(), reverse=True)
+P = [[0]*n for i in range(n)]
 for i in range(n):
     P[i][S.index(S_sort[i])] = 1
     if i != 0 and S_sort[i] == S_sort[i-1]:
-
         P[i][S.index(S_sort[i])] = 0
-        P[i][S.index(S_sort[i], )] = 1
+        P[i][S.index(S_sort[i], P[i-1].index(1)+1)] = 1
 
-
+P = np.array(P)
 
 #Матрица
 
 P_t = P.transpose()
 Tau = P.dot(T).dot(P_t)
+K = P.dot(A).dot(P_t)
+print("")
 
 
 
